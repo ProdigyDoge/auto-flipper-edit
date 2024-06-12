@@ -82,10 +82,8 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         )} coins (Target: ${numberWithThousandsSeparators(flip.target)}) §e(Profit: +${numberWithThousandsSeparators(flip.target - flip.startingBid * 0.965).split(".")[0]})`
     )
 
-    await sleep(500); // Reduced delay for faster action
-
     if (getConfigProperty('USE_WINDOW_SKIPS')) {
-        await useWindowSkipPurchase(bot, flip, isBed);
+        useWindowSkipPurchase(bot, flip, isBed);
         
         // clear timeout after 1sec, so there are no weird overlaps that mess up the windowIds
         setTimeout(() => {
