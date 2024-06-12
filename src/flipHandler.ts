@@ -69,6 +69,12 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     bot.lastViewAuctionCommandForPurchase = `/viewauction ${flip.id}`;
     bot.chat(bot.lastViewAuctionCommandForPurchase);
 
+    printMcChatToConsole(
+        `§f[§4BAF§f]: §fTrying to purchase flip${isBed ? ' (Bed)' : ''}: ${flip.itemName} §ffor ${numberWithThousandsSeparators(
+            flip.startingBid
+        )} coins (Target: ${numberWithThousandsSeparators(flip.target)}) §e(Profit: +${numberWithThousandsSeparators(flip.target - flip.startingBid * 0.965).split(".")[0]})`
+    )
+
     await sleep(500); // Reduced delay for faster action
 
     if (getConfigProperty('USE_WINDOW_SKIPS')) {
