@@ -219,7 +219,7 @@ async function sendWebhookTotalsMSG(buyTotal: number, soldTotal: number) {
                 soldTotal = parseInt(value, 10);
             }
         }
-        
+    }
         await SendWebhookTotals(buyTotal, soldTotal);
 
         const fileContent2 = `buy_total=0\nsold_total=0`;
