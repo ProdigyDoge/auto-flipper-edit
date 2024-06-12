@@ -1,3 +1,54 @@
+import { Flip, MyBot } from '../types/autobuy';
+import { getConfigProperty } from './configHelper';
+import { getFastWindowClicker } from './fastWindowClick';
+import { log, printMcChatToConsole } from './logger';
+import { clickWindow, getWindowTitle, numberWithThousandsSeparators, sleep } from './utils';
+import { ChatMessage } from 'prismarine-chat';
+import { sendWebhookItemPurchased, sendWebhookItemPurchased100M } from './webhookHandler';
+import moment from 'moment';
+import { claimPurchased } from './ingameMessageHandler';
+const fs = require('fs');
+const path = require('path');
+
+let notcoins = false;
+let globalText = "";
+let flips_bed = 0;
+let no_beds = 0;
+let buy_total = 0;  
+let sold_total = 0;
+
+function updateTotalsFile() {
+    const filePath = path.join(__dirname, 'totals.txt');
+    const data = `buy_total=${buy_total}\nsold_total=${sold_total}\nflips_bed=${flips_bed}\nno_beds=${no_beds}`;
+    fs.writeFileSync(filePath, data);
+}
+
+export function registerIngameMessage(bot: MyBot) {
+    bot.on('message', (message: ChatMessage, type) => {
+        let text = message.getText(null);
+        if (type == 'chat') {
+            if (text.startsWith("You") && text.includes("don't have") && text.includes('afford this bid')) {
+                notcoins = true;
+            }
+            if (text.startsWith('You') && text.includes('purchased') && text.includes('for')) {
+                globalText = text;
+            }
+            if (text.startsWith('You purchased')) {
+                buy_total += 1;
+                setTimeout(() => {
+                    updateTotalsFile();
+                }, 100);
+            }
+            if (text.startsWith('[Auction]') && text.includes('bought') && text.includes('for')) {
+                sold_total += 1;
+                setTimeout(() => {
+                    updateTotalsFile();
+                }, 100);
+            }
+        }
+    });
+}
+
 export async function flipHandler(bot: MyBot, flip: Flip) {
     notcoins = false;
     flip.purchaseAt = new Date(flip.purchaseAt);
