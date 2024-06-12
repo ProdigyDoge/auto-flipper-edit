@@ -219,14 +219,14 @@ async function sendWebhookTotalsMSG(buyTotal: number, soldTotal: number) {
                 soldTotal = parseInt(value, 10);
             }
         }
-    }
+    
         await SendWebhookTotals(buyTotal, soldTotal);
 
         const fileContent2 = `buy_total=0\nsold_total=0`;
         fs.writeFileSync(filePath, fileContent2);
         executed = false;
     }
-
+}
 sendWebhookTotalsMSG(0, 0);
 
 const startSession = (Date.now() / 1000).toFixed(0)
