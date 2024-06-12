@@ -49,93 +49,6 @@ export function registerIngameMessage(bot: MyBot) {
     });
 }
 
-async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
-    bot.addListener('windowOpen', async window => {
-        let title = getWindowTitle(window);
-        let window1 = bot.currentWindow;
-        let total_clicks = 0;
-        if (isBed && title.toString().includes('BIN Auction View')) {
-            log(`Starting the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-            let items = window1.containerItems();
-            bot.state = 'purchasing';
-
-            // Filter out the 'black_stained_glass_pane' item
-            items = items.filter(item => item.name !== 'black_stained_glass_pane');
-            let potatoItem = items.find(item => item.name === 'potato');
-
-            if (potatoItem) {
-                console.log('Item "potato" found. Stopping the loop...');
-                return;
-            }
-
-            while (!title.toString().includes('Confirm Purchase') && !potatoItem) {
-                await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS')); // Removed random delay
-                clickWindow(bot, 31);
-                total_clicks++;
-
-                // Update the window and the list of items
-                window1 = bot.currentWindow;
-                title = getWindowTitle(window1);
-                items = window1.containerItems().filter(item => item.name !== 'black_stained_glass_pane');
-                potatoItem = items.find(item => item.name === 'potato');
-
-                if (potatoItem) {
-                    console.log('Item "potato" found. Stopping the loop.');
-                    break;
-                }
-                if (notcoins || total_clicks > 300) {
-                    let title = getWindowTitle(window1);
-                    if (title.toString().includes('BIN Auction View')) {
-                        printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
-                        bot.removeAllListeners('windowOpen');
-                        bot.state = null;
-                        bot.closeWindow(window);
-                        notcoins = false;
-                        return;
-                    }
-                }
-            }
-        }
-
-        log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-        printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
-        total_clicks = 0;
-    });
-
-    if (title.toString().includes('BIN Auction View')) {
-        clickWindow(bot, 31);
-    }
-
-    if (title.toString().includes('Confirm Purchase')) {
-        let startTime = Date.now();
-        let itemFound = false;
-
-        while (!itemFound) {
-            let items = window1.containerItems();
-            let item = items.find(item => item.name === 'green_terracotta');
-            if (item) {
-                log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-                clickWindow(bot, 11);
-                try {
-                    bot.removeAllListeners('windowOpen');
-                    bot.state = null;
-                    itemFound = true;
-
-                    let endTime = Date.now();
-                    let duration = endTime - startTime;
-                    log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
-
-                    return;
-                } catch (error) {
-                    return printMcChatToConsole(`Error in the try ${error}`);
-                }
-            } else {
-                await sleep(10); // Removed random delay
-            }
-        }
-    }
-}
-
 async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     let lastWindowId = getFastWindowClicker().getLastWindowId();
     if (isBed) {
@@ -235,7 +148,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 console.log('Item "potato" found. Stopping the loop...');
                 return;
             }
-            
+
             while (!title.toString().includes('Confirm Purchase') && !potatoItem) {
                 await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS')); // Removed random delay
                 clickWindow(bot, 31);
@@ -251,24 +164,24 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                     console.log('Item "potato" found. Stopping the loop.');
                     break;
                 }
-            if (notcoins || total_clicks > 300) {
-                let title = getWindowTitle(window1);
-                if (title.toString().includes('BIN Auction View')) {
-                    printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
-                    bot.removeAllListeners('windowOpen');
-                    bot.state = null;
-                    bot.closeWindow(window);
-                    notcoins = false;
-                    return;
+                if (notcoins || total_clicks > 300) {
+                    let title = getWindowTitle(window1);
+                    if (title.toString().includes('BIN Auction View')) {
+                        printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
+                        bot.removeAllListeners('windowOpen');
+                        bot.state = null;
+                        bot.closeWindow(window);
+                        notcoins = false;
+                        return;
+                    }
                 }
             }
         }
-        }
-    
+
         log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
         printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
         total_clicks = 0;
-    }
+    });
 
     if (title.toString().includes('BIN Auction View')) {
         clickWindow(bot, 31);
@@ -302,7 +215,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
             }
         }
     }
-};
+}
 
 
 async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
