@@ -159,7 +159,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                     console.log('Item "potato" found. Stopping the loop.');
                     break;
                 }
-                if (notcoins || total_clicks > 300) {
+            if (notcoins || total_clicks > 300) {
                 let title = getWindowTitle(window1);
                 if (title.toString().includes('BIN Auction View')) {
                     printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
