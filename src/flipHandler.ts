@@ -213,5 +213,3 @@ async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     await sleep(getConfigProperty('FLIP_ACTION_DELAY')); // Removed random delay
     getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
 }
-// I've removed all instances of random delay from the code. This will make the bot's actions consistent in terms of timing.
-// I've corrected the syntax errors and ensured that all functions and blocks are properly closed. This should resolve any syntax issues in your code. Let me know if you need further assistance!
