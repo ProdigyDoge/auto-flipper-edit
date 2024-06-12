@@ -49,17 +49,6 @@ export function registerIngameMessage(bot: MyBot) {
     });
 }
 
-async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
-    let lastWindowId = getFastWindowClicker().getLastWindowId();
-    if (isBed) {
-        getFastWindowClicker().clickBedPurchase(flip.startingBid, lastWindowId + 1);
-    } else {
-        getFastWindowClicker().clickPurchase(flip.startingBid, lastWindowId + 1);
-    }
-    await sleep(getConfigProperty('FLIP_ACTION_DELAY')); // Removed random delay
-    getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
-}
-
 export async function flipHandler(bot: MyBot, flip: Flip) {
     notcoins = false;
     flip.purchaseAt = new Date(flip.purchaseAt);
