@@ -86,6 +86,12 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
 
     if (getConfigProperty('USE_WINDOW_SKIPS')) {
         await useWindowSkipPurchase(bot, flip, isBed);
+        
+        // clear timeout after 1sec, so there are no weird overlaps that mess up the windowIds
+        setTimeout(() => {
+            bot.state = null
+            clearTimeout(timeout)
+        }, 2500)
     } else {
         await useRegularPurchase(bot, isBed, flip);
         await sleep(2000);
