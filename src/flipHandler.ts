@@ -163,6 +163,8 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 }
             }
         }
+        }
+    
         log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
         printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
         total_clicks = 0;
@@ -213,5 +215,5 @@ async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     await sleep(getConfigProperty('FLIP_ACTION_DELAY')); // Removed random delay
     getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
 }
-    }
+    
 }
