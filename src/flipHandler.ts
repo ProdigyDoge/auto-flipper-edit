@@ -1,4 +1,3 @@
-
 import { Flip, MyBot } from '../types/autobuy';
 import { getConfigProperty } from './configHelper';
 import { getFastWindowClicker } from './fastWindowClick';
