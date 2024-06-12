@@ -75,37 +75,48 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         await useWindowSkipPurchase(bot, flip, isBed);
     } else {
         await useRegularPurchase(bot, isBed, flip);
-        await sleep(2000)
-        if (globalText.startsWith('You purchased')) {
-            claimPurchased(bot)
-            let value = flip.target - flip.startingBid;
-            let valueMinus3_5Percent = value * 0.965;
-            let result = numberWithThousandsSeparators(valueMinus3_5Percent);
-            let parts = result.split(".");
-            let formattedValue = parts[0];
-            let numericValue = Number(formattedValue.replace(/,/g, ''));
+        await sleep(2000);
+        
+if (globalText.startsWith('You purchased')) {
+    claimPurchased(bot);
+    let value = flip.target - flip.startingBid;
+    let valueMinus3_5Percent = value * 0.965;
+    let result = numberWithThousandsSeparators(valueMinus3_5Percent);
+    let parts = result.split(".");
+    let formattedValue = parts[0];
+    let numericValue = Number(formattedValue.replace(/,/g, ''));
 
-            if (isBed) {
-                flips_bed += 1
-                updateTotalsFile();
-            }
-            if (!isBed) {
-                no_beds += 1
-                updateTotalsFile();
-            }
-            if (numericValue < 100000000){
-                sendWebhookItemPurchased(globalText.split(' purchased ')[1].split(' for ')[0], 
-                globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`)
-            }
-            if (numericValue >= 100000000) {
-                sendWebhookItemPurchased100M(globalText.split(' purchased ')[1].split(' for ')[0], 
-                globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`)
-            }
-            globalText = '';
-        }
+    if (isBed) {
+        flips_bed += 1;
+        updateTotalsFile();
     }
-}
+    if (!isBed) {
+        no_beds += 1;
+        updateTotalsFile();
+    }
+    if (numericValue < 100000000){
+        sendWebhookItemPurchased(globalText.split(' purchased ')[1].split(' for ')[0], 
+        globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`);
+    }
+    if (numericValue >= 100000000) {
+        sendWebhookItemPurchased100M(globalText.split(' purchased ')[1].split(' for ')[0], 
+        globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`);
+    }
+    globalText = '';
+} else {
+    // Additional error handling to prevent unnecessary retries
+    if (bot.state === 'purchasing') {
+        log("Resetting 'bot.state === purchasing' lock due to error or item not found");
+        bot.state = null;
+        bot.removeAllListeners('windowOpen');
+        notcoins = false;
+    }
 
+    // Retry logic if purchase fails
+    log("Purchase attempt failed, retrying...");
+    await flipHandler(bot, flip);
+}
+        
 async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
     bot.addListener('windowOpen', async window => {
         let title = getWindowTitle(window);
