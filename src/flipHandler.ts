@@ -56,9 +56,30 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     if (bot.state) {
         setTimeout(() => {
             flipHandler(bot, flip);
-        }, 1100);
+        }, 800); // Reduced delay to 800 milliseconds for faster retry
         return;
     }
+    bot.state = 'purchasing';
+    
+    let isBed = flip.purchaseAt.getTime() > new Date().getTime();
+    let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
+
+    // Adjusted delay durations for faster action
+    await sleep(delayUntilBuyStart * 0.75); // Reduced delay by 25%
+    
+    // Optimized window handling for faster interaction
+    bot.lastViewAuctionCommandForPurchase = `/viewauction ${flip.id}`;
+    bot.chat(bot.lastViewAuctionCommandForPurchase);
+    
+    // Adjusted delay for faster action
+    await sleep(500); // Reduced delay to 500 milliseconds
+    
+    if (getConfigProperty('USE_WINDOW_SKIPS')) {
+        await useWindowSkipPurchase(bot, flip, isBed);
+    } else {
+        await useRegularPurchase(bot, isBed, flip);
+    }
+}
     bot.state = 'purchasing';
     let timeout = setTimeout(() => {
         if (bot.state === 'purchasing') {
