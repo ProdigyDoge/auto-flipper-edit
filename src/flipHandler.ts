@@ -60,13 +60,20 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         return;
     }
 
-    bot.state = 'purchasing';
+    bot.state = 'purchasing'
+    let timeout = setTimeout(() => {
+        if (bot.state === 'purchasing') {
+            log("Resetting 'bot.state === purchasing' lock")
+            bot.state = null
+            bot.removeAllListeners('windowOpen')
+            notcoins = false;
+        }
+    }, 7100)
     let isBed = flip.purchaseAt.getTime() > new Date().getTime();
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
 
-    await sleep(delayUntilBuyStart * 0.75); // Reduced delay for faster action
-
     bot.lastViewAuctionCommandForPurchase = `/viewauction ${flip.id}`;
+    await sleep(delayUntilBuyStart * 0.75); // Reduced delay for faster action
     bot.chat(bot.lastViewAuctionCommandForPurchase);
 
     printMcChatToConsole(
