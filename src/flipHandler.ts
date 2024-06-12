@@ -198,7 +198,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 let item = items.find(item => item.name === 'green_terracotta');
                 if (item) {
                     log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-                    clickWindow(bot, 5);
+                    clickWindow(bot, 8);
                     try {
                         bot.removeAllListeners('windowOpen');
                         bot.state = null;
