@@ -186,7 +186,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
 
         // Move this part inside the 'windowOpen' listener callback
         if (title.toString().includes('BIN Auction View')) {
-            clickWindow(bot, 23);
+            clickWindow(bot, 31);
         }
 
         if (title.toString().includes('Confirm Purchase')) {
