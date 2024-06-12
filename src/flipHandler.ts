@@ -56,7 +56,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     if (bot.state) {
         setTimeout(() => {
             flipHandler(bot, flip);
-        }, 385); // Reduced delay for faster retry
+        }, 350); // Reduced delay for faster retry
         return;
     }
 
@@ -68,7 +68,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
             bot.removeAllListeners('windowOpen')
             notcoins = false;
         }
-    }, 5750)
+    }, 5625)
     let isBed = flip.purchaseAt.getTime() > new Date().getTime();
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
 
@@ -89,10 +89,10 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         setTimeout(() => {
             bot.state = null
             clearTimeout(timeout)
-        }, 2000)
+        }, 1875)
     } else {
         await useRegularPurchase(bot, isBed, flip);
-        await sleep(1050);
+        await sleep(985);
 
         if (globalText.startsWith('You purchased')) {
             claimPurchased(bot);
@@ -213,7 +213,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                         return printMcChatToConsole(`Error in the try ${error}`);
                     }
                 } else {
-                    await sleep(7); // Removed random delay
+                    await sleep(6); // Removed random delay
                 }
             }
         }
