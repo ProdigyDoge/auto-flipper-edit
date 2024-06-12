@@ -130,10 +130,6 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
                 bot.removeAllListeners('windowOpen');
                 notcoins = false;
             }
-
-            // Retry logic if purchase fails
-            log("Purchase attempt failed, retrying...");
-            await flipHandler(bot, flip);
         }
     }
 }
