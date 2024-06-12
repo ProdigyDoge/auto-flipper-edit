@@ -90,7 +90,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         }, 2500);
     } else {
         await useRegularPurchase(bot, isBed, flip);
-        await sleep(2500 + Math.random() * 500); // Added random delay for human-like behavior
+        await sleep(2500); // Removed random delay
         if (globalText.startsWith('You purchased')) {
             claimPurchased(bot);
             let value = flip.target - flip.startingBid;
@@ -145,7 +145,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
             }
             
             while (!title.toString().includes('Confirm Purchase') && !potatoItem) {
-                await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS') + Math.random() * 20); // Added random delay
+                await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS')); // Removed random delay
                 clickWindow(bot, 31);
                 total_clicks++;
 
@@ -160,65 +160,64 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                     break;
                 }
                 if (notcoins || total_clicks > 300) {
-                    let title = getWindowTitle(window1);
-                    if (title.toString().includes('BIN Auction View')) {
-                        printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
-                        bot.removeAllListeners('windowOpen');
-                        bot.state = null;
-                        bot.closeWindow(window);
-                        notcoins = false;
-                        return;
-                    }
-                }
-            }
-            log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-            printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
-            total_clicks = 0;
-        }
-
-        if (title.toString().includes('BIN Auction View')) {
-            clickWindow(bot, 31);
-        }
-
-        if (title.toString().includes('Confirm Purchase')) {
-            let startTime = Date.now();
-            let itemFound = false;
-
-            while (!itemFound) {
-                let items = window1.containerItems();
-                let item = items.find(item => item.name === 'green_terracotta');
-                if (item) {
-                    log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-                    clickWindow(bot, 11);
-                    try {
-                        bot.removeAllListeners('windowOpen');
-                        bot.state = null;
-                        itemFound = true;
-
-                        let endTime = Date.now();
-                        let duration = endTime - startTime;
-                        log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
-
-                        return;
-                    } catch (error) {
-                        return printMcChatToConsole(`Error in the try ${error}`);
-                    }
-                } else {
-                    await sleep(10 + Math.random() * 5); // Added random delay
+                let title = getWindowTitle(window1);
+                if (title.toString().includes('BIN Auction View')) {
+                    printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
+                    bot.removeAllListeners('windowOpen');
+                    bot.state = null;
+                    bot.closeWindow(window);
+                    notcoins = false;
+                    return;
                 }
             }
         }
-    });
-}
-
-async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
-    let lastWindowId = getFastWindowClicker().getLastWindowId();
-
-    if (isBed) {
-        getFastWindowClicker().clickBedPurchase(flip.startingBid, lastWindowId + 1);
-    } else {
-        getFastWindowClicker().clickPurchase(flip.startingBid, lastWindowId + 1);
+        log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
+        printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
+        total_clicks = 0;
     }
-    await sleep(getConfigProperty('FLIP_ACTION_DELAY') + Math.random() * 50); // Added random delay
-    getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
+
+    if (title.toString().includes('BIN Auction View')) {
+        clickWindow(bot, 31);
+    }
+
+    if (title.toString().includes('Confirm Purchase')) {
+        let startTime = Date.now();
+        let itemFound = false;
+
+        while (!itemFound) {
+            let items = window1.containerItems();
+            let item = items.find(item => item.name === 'green_terracotta');
+            if (item) {
+                log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
+                clickWindow(bot, 11);
+                try {
+                    bot.removeAllListeners('windowOpen');
+                    bot.state = null;
+                    itemFound = true;
+
+                    let endTime = Date.now();
+                    let duration = endTime - startTime;
+                    log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
+
+                    return;
+                } catch (error) {
+                    return printMcChatToConsole(`Error in the try ${error}`);
+                }
+            } else {
+                await sleep(10); // Removed random delay
+            }
+        }
+    }
+});
 }
+async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
+let lastWindowId = getFastWindowClicker().getLastWindowId();
+    if (isBed) {
+    getFastWindowClicker().clickBedPurchase(flip.startingBid, lastWindowId + 1);
+} else {
+    getFastWindowClicker().clickPurchase(flip.startingBid, lastWindowId + 1);
+}
+await sleep(getConfigProperty('FLIP_ACTION_DELAY')); // Removed random delay
+getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
+}
+// I've removed all instances of random delay from the code. This will make the bot's actions consistent in terms of timing.
