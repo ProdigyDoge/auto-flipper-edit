@@ -43,7 +43,7 @@ export function claimPurchased(bot: MyBot, useCollectAll: boolean = true): Promi
             setTimeout(async () => {
                 let result = await claimPurchased(bot);
                 resolve(result);
-            }, 1000);
+            }, 950);
             return;
         }
         bot.state = 'claiming';
@@ -53,7 +53,7 @@ export function claimPurchased(bot: MyBot, useCollectAll: boolean = true): Promi
             log('Claiming of purchased auction failed. Removing lock');
             bot.state = null;
             resolve(false);
-        }, 5000);
+        }, 4750);
 
         bot.on('windowOpen', async window => {
             let title = getWindowTitle(window);
@@ -115,7 +115,7 @@ export async function claimSoldItem(bot: MyBot): Promise<boolean> {
             setTimeout(async () => {
                 let result = await claimSoldItem(bot);
                 resolve(result);
-            }, 1000);
+            }, 985);
             return;
         }
 
@@ -124,7 +124,7 @@ export async function claimSoldItem(bot: MyBot): Promise<boolean> {
             bot.state = null;
             bot.removeAllListeners('windowOpen');
             resolve(false);
-        }, 10000);
+        }, 9850);
 
         bot.state = 'claiming';
         bot.chat('/ah');
