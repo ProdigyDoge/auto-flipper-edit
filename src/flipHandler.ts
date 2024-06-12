@@ -73,7 +73,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
 
     bot.lastViewAuctionCommandForPurchase = `/viewauction ${flip.id}`;
-    await sleep(delayUntilBuyStart * 0.75); // Reduced delay for faster action
+    await sleep(delayUntilBuyStart)
     bot.chat(bot.lastViewAuctionCommandForPurchase);
 
     printMcChatToConsole(
