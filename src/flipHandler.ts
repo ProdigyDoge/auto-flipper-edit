@@ -68,7 +68,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
             bot.removeAllListeners('windowOpen')
             notcoins = false;
         }
-    }, 7100)
+    }, 6500)
     let isBed = flip.purchaseAt.getTime() > new Date().getTime();
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
 
@@ -92,7 +92,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         }, 2500)
     } else {
         await useRegularPurchase(bot, isBed, flip);
-        await sleep(1750);
+        await sleep(1500);
 
         if (globalText.startsWith('You purchased')) {
             claimPurchased(bot);
