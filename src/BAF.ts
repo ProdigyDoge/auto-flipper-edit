@@ -226,7 +226,6 @@ async function sendWebhookTotalsMSG(buyTotal: number, soldTotal: number) {
         fs.writeFileSync(filePath, fileContent2);
         executed = false;
     }
-}
 
 sendWebhookTotalsMSG(0, 0);
 
