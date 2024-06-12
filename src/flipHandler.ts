@@ -186,7 +186,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
 
         // Move this part inside the 'windowOpen' listener callback
         if (title.toString().includes('BIN Auction View')) {
-            clickWindow(bot, 31);
+            clickWindow(bot, 23);
         }
 
         if (title.toString().includes('Confirm Purchase')) {
@@ -198,7 +198,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 let item = items.find(item => item.name === 'green_terracotta');
                 if (item) {
                     log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-                    clickWindow(bot, 11);
+                    clickWindow(bot, 5);
                     try {
                         bot.removeAllListeners('windowOpen');
                         bot.state = null;
@@ -213,7 +213,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                         return printMcChatToConsole(`Error in the try ${error}`);
                     }
                 } else {
-                    await sleep(10); // Removed random delay
+                    await sleep(8); // Removed random delay
                 }
             }
         }
