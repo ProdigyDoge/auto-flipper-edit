@@ -92,7 +92,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         }, 2500)
     } else {
         await useRegularPurchase(bot, isBed, flip);
-        await sleep(2000);
+        await sleep(1750);
 
         if (globalText.startsWith('You purchased')) {
             claimPurchased(bot);
