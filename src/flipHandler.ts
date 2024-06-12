@@ -14,7 +14,7 @@ let notcoins = false;
 let globalText = "";
 let flips_bed = 0;
 let no_beds = 0;
-let buy_total = 0;  
+let buy_total = 0;
 let sold_total = 0;
 
 function updateTotalsFile() {
@@ -67,7 +67,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 console.log('Item "potato" found. Stopping the loop...');
                 return;
             }
-            
+
             while (!title.toString().includes('Confirm Purchase') && !potatoItem) {
                 await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS')); // Removed random delay
                 clickWindow(bot, 31);
@@ -96,7 +96,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
             }
         }
         }
-    
+
         log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
         printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
         total_clicks = 0;
@@ -170,11 +170,11 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     await sleep(500); // Reduced delay for faster action
 
     if (getConfigProperty('USE_WINDOW_SKIPS')) {
-        useWindowSkipPurchase(bot, flip, isBed);
+        await useWindowSkipPurchase(bot, flip, isBed);
     } else {
         await useRegularPurchase(bot, isBed, flip);
         await sleep(2000);
-        
+
         if (globalText.startsWith('You purchased')) {
             claimPurchased(bot);
             let value = flip.target - flip.startingBid;
@@ -192,13 +192,13 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
                 no_beds += 1;
                 updateTotalsFile();
             }
-            if (numericValue < 100000000){
-                sendWebhookItemPurchased(globalText.split(' purchased ')[1].split(' for ')[0], 
-                globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`);
+            if (numericValue < 100000000) {
+                sendWebhookItemPurchased(globalText.split(' purchased ')[1].split(' for ')[0],
+                    globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`);
             }
             if (numericValue >= 100000000) {
-                sendWebhookItemPurchased100M(globalText.split(' purchased ')[1].split(' for ')[0], 
-                globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`);
+                sendWebhookItemPurchased100M(globalText.split(' purchased ')[1].split(' for ')[0],
+                    globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`);
             }
             globalText = '';
         } else {
