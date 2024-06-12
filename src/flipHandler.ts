@@ -153,7 +153,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
 
             while (!title.toString().includes('Confirm Purchase') && !potatoItem) {
                 await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS')); // Removed random delay
-                clickWindow(bot, 31);
+                clickWindow(bot, 21);
                 total_clicks++;
 
                 // Update the window and the list of items
