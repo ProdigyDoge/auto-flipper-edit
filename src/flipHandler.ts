@@ -133,11 +133,11 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
 async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
     bot.addListener('windowOpen', async window => {
         let title = getWindowTitle(window);
-        let window1 = bot.currentWindow;
+        let window = bot.currentWindow;
         let total_clicks = 0;
         if (isBed && title.toString().includes('BIN Auction View')) {
             log(`Starting the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-            let items = window1.containerItems();
+            let items = window.containerItems();
             bot.state = 'purchasing';
 
             // Filter out the 'black_stained_glass_pane' item
@@ -155,9 +155,9 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 total_clicks++;
 
                 // Update the window and the list of items
-                window1 = bot.currentWindow;
-                title = getWindowTitle(window1);
-                items = window1.containerItems().filter(item => item.name !== 'black_stained_glass_pane');
+                window = bot.currentWindow;
+                title = getWindowTitle(window);
+                items = window.containerItems().filter(item => item.name !== 'black_stained_glass_pane');
                 potatoItem = items.find(item => item.name === 'potato');
 
                 if (potatoItem) {
@@ -165,7 +165,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                     break;
                 }
                 if (notcoins || total_clicks > 300) {
-                    let title = getWindowTitle(window1);
+                    let title = getWindowTitle(window);
                     if (title.toString().includes('BIN Auction View')) {
                         printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
                         bot.removeAllListeners('windowOpen');
@@ -192,7 +192,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
         let itemFound = false;
 
         while (!itemFound) {
-            let items = window1.containerItems();
+            let items = window.containerItems();
             let item = items.find(item => item.name === 'green_terracotta');
             if (item) {
                 log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
