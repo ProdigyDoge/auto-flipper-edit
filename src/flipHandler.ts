@@ -76,14 +76,6 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     } else {
         await useRegularPurchase(bot, isBed, flip);
     }
-
-    // Additional error handling to prevent unnecessary retries
-    if (bot.state === 'purchasing') {
-        log("Resetting 'bot.state === purchasing' lock due to error or item not found");
-        bot.state = null;
-        bot.removeAllListeners('windowOpen');
-        notcoins = false;
-    }
 }
 
 async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
