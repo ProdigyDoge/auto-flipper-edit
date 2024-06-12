@@ -193,11 +193,7 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
         
                     clickWindow(bot, 11);
                     try {
-                        await sleep(2);
-                        clickWindow(bot, 11);
-                        await sleep(20);
-                        clickWindow(bot, 11);
-    
+                        
                         bot.removeAllListeners('windowOpen');
                         bot.state = null;
                         itemFound = true;
