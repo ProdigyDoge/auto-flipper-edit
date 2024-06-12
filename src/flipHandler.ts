@@ -302,8 +302,8 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
             }
         }
     }
-});
-}
+};
+
 
 async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     let lastWindowId = getFastWindowClicker().getLastWindowId();
@@ -316,4 +316,4 @@ async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
 }
     
-}
+
