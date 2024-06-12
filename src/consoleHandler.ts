@@ -16,15 +16,15 @@ export async function processInput(bot: MyBot, input: string) {
         if (window) {
             bot.closeWindow(window)
         }
-        await sleep(1000)
+        await sleep(750)
         bot.chat(input)
-        await sleep(1000)
+        await sleep(750)
         let window2 = bot.currentWindow;
         let items = window2.containerItems();
         items = items.filter(item => item.name !== 'black_stained_glass_pane');
         clickWindow(bot, 11)
         clickWindow(bot, 13)
-        await sleep(2000)
+        await sleep(1500)
         bot.removeAllListeners('windowOpen')
         bot.state = null
         bot.closeWindow(window2)
