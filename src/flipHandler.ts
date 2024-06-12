@@ -213,3 +213,4 @@ async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     await sleep(getConfigProperty('FLIP_ACTION_DELAY')); // Removed random delay
     getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
 }
+    }
