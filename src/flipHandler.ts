@@ -67,7 +67,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
             bot.removeAllListeners('windowOpen');
             notcoins = false;
         }
-    }, 8000); // Increased timeout duration to 8 seconds
+    }, 7300); // Increased timeout duration to 8 seconds
 
     let isBed = flip.purchaseAt.getTime() > new Date().getTime();
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
