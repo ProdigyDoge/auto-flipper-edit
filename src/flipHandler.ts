@@ -56,7 +56,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     if (bot.state) {
         setTimeout(() => {
             flipHandler(bot, flip);
-        }, 7100); // Reduced delay for faster retry
+        }, 500); // Reduced delay for faster retry
         return;
     }
 
