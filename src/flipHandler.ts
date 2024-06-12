@@ -214,3 +214,4 @@ async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
 }
     }
+}
