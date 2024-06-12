@@ -75,6 +75,34 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         await useWindowSkipPurchase(bot, flip, isBed);
     } else {
         await useRegularPurchase(bot, isBed, flip);
+        await sleep(2000)
+        if (globalText.startsWith('You purchased')) {
+            claimPurchased(bot)
+            let value = flip.target - flip.startingBid;
+            let valueMinus3_5Percent = value * 0.965;
+            let result = numberWithThousandsSeparators(valueMinus3_5Percent);
+            let parts = result.split(".");
+            let formattedValue = parts[0];
+            let numericValue = Number(formattedValue.replace(/,/g, ''));
+
+            if (isBed) {
+                flips_bed += 1
+                updateTotalsFile();
+            }
+            if (!isBed) {
+                no_beds += 1
+                updateTotalsFile();
+            }
+            if (numericValue < 100000000){
+                sendWebhookItemPurchased(globalText.split(' purchased ')[1].split(' for ')[0], 
+                globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`)
+            }
+            if (numericValue >= 100000000) {
+                sendWebhookItemPurchased100M(globalText.split(' purchased ')[1].split(' for ')[0], 
+                globalText.split(' for ')[1].split(' coins!')[0], `${"+" + formattedValue}`)
+            }
+            globalText = '';
+        }
     }
 }
 
