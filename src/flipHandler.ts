@@ -170,40 +170,41 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
         log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
         printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
         total_clicks = 0;
-    });
 
-    if (title.toString().includes('BIN Auction View')) {
-        clickWindow(bot, 31);
-    }
+        // Move this part inside the 'windowOpen' listener callback
+        if (title.toString().includes('BIN Auction View')) {
+            clickWindow(bot, 31);
+        }
 
-    if (title.toString().includes('Confirm Purchase')) {
-        let startTime = Date.now();
-        let itemFound = false;
+        if (title.toString().includes('Confirm Purchase')) {
+            let startTime = Date.now();
+            let itemFound = false;
 
-        while (!itemFound) {
-            let items = currentWindow.containerItems(); // Use 'currentWindow' instead of 'window'
-            let item = items.find(item => item.name === 'green_terracotta');
-            if (item) {
-                log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-                clickWindow(bot, 11);
-                try {
-                    bot.removeAllListeners('windowOpen');
-                    bot.state = null;
-                    itemFound = true;
+            while (!itemFound) {
+                let items = currentWindow.containerItems(); // Use 'currentWindow' instead of 'window'
+                let item = items.find(item => item.name === 'green_terracotta');
+                if (item) {
+                    log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
+                    clickWindow(bot, 11);
+                    try {
+                        bot.removeAllListeners('windowOpen');
+                        bot.state = null;
+                        itemFound = true;
 
-                    let endTime = Date.now();
-                    let duration = endTime - startTime;
-                    log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
+                        let endTime = Date.now();
+                        let duration = endTime - startTime;
+                        log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
 
-                    return;
-                } catch (error) {
-                    return printMcChatToConsole(`Error in the try ${error}`);
+                        return;
+                    } catch (error) {
+                        return printMcChatToConsole(`Error in the try ${error}`);
+                    }
+                } else {
+                    await sleep(10); // Removed random delay
                 }
-            } else {
-                await sleep(10); // Removed random delay
             }
         }
-    }
+    });
 }
 
 async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
