@@ -72,7 +72,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     await sleep(500); // Reduced delay for faster action
 
     if (getConfigProperty('USE_WINDOW_SKIPS')) {
-        await useWindowSkipPurchase(bot, flip, isBed);
+        useWindowSkipPurchase(bot, flip, isBed);
     } else {
         await useRegularPurchase(bot, isBed, flip);
         await sleep(2000);
