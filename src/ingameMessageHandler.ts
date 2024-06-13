@@ -58,8 +58,9 @@ export function claimPurchased(bot: MyBot, useCollectAll = true): Promise<boolea
                 for (let i = 0; i < window.slots.length; i++) {
                     const slot = window.slots[i];
                     if (slot && typeof slot === 'object' && 'nbt' in slot && slot.nbt && typeof slot.nbt === 'object') {
-                        const display = slot.nbt.value?.display;
-                        if (display && typeof display === 'object') {
+                        const nbtValue = slot.nbt.value;
+                        if (nbtValue && typeof nbtValue === 'object' && 'display' in nbtValue) {
+                            const display = nbtValue.display;
                             const name = display.value?.Name?.value;
                             if (useCollectAll && slot?.type === 380 && name?.includes('Claim') && name?.includes('All')) {
                                 log(`Found cauldron to claim all purchased auctions -> clicking index ${i}`);
@@ -128,8 +129,9 @@ export async function claimSoldItem(bot: MyBot): Promise<boolean> {
 
                 for (const slot of window.slots) {
                     if (slot && typeof slot === 'object' && 'nbt' in slot && slot.nbt && typeof slot.nbt === 'object') {
-                        const display = slot.nbt.value?.display;
-                        if (display && typeof display === 'object') {
+                        const nbtValue = slot.nbt.value;
+                        if (nbtValue && typeof nbtValue === 'object' && 'display' in nbtValue) {
+                            const display = nbtValue.display;
                             const lore = display.value?.Lore;
                             if (lore && JSON.stringify(lore).includes('Sold for')) {
                                 clickSlot = slot.slot;
