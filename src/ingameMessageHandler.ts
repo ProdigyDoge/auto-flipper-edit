@@ -55,8 +55,9 @@ export function claimPurchased(bot: MyBot, useCollectAll = true): Promise<boolea
 
             if (title.includes('Your Bids')) {
                 let slotToClick = -1;
-                for (const [i, slot] of window.slots.entries()) {
-                    const name = slot?.nbt?.value?.display?.value?.Name?.value?.toString();
+               for (let i = 0; i < window.slots.length; i++) {
+                const slot = window.slots[i]
+                let name = (slot?.nbt as any)?.value?.display?.value?.Name?.value?.toString()
                     if (useCollectAll && slot?.type === 380 && name?.includes('Claim') && name?.includes('All')) {
                         log(`Found cauldron to claim all purchased auctions -> clicking index ${i}`);
                         clickWindow(bot, i);
