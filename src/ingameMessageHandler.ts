@@ -58,19 +58,22 @@ export function claimPurchased(bot: MyBot, useCollectAll = true): Promise<boolea
                 for (let i = 0; i < window.slots.length; i++) {
                     const slot = window.slots[i];
                     if (slot && typeof slot === 'object' && 'nbt' in slot && slot.nbt && typeof slot.nbt === 'object') {
-                        const name = slot.nbt.value?.display?.value?.Name?.value;
-                        if (useCollectAll && slot?.type === 380 && name?.includes('Claim') && name?.includes('All')) {
-                            log(`Found cauldron to claim all purchased auctions -> clicking index ${i}`);
-                            clickWindow(bot, i);
-                            clearTimeout(timeout);
-                            bot.state = null;
-                            resolve(true);
-                            return;
-                        }
-                        const lore = slot.nbt.value?.display?.value?.Lore?.value?.toString();
-                        if (lore?.includes('Status:') && lore?.includes('Sold!')) {
-                            log(`Found claimable purchased auction. Gonna click index ${i}`);
-                            slotToClick = i;
+                        const display = slot.nbt.value?.display;
+                        if (display && typeof display === 'object') {
+                            const name = display.value?.Name?.value;
+                            if (useCollectAll && slot?.type === 380 && name?.includes('Claim') && name?.includes('All')) {
+                                log(`Found cauldron to claim all purchased auctions -> clicking index ${i}`);
+                                clickWindow(bot, i);
+                                clearTimeout(timeout);
+                                bot.state = null;
+                                resolve(true);
+                                return;
+                            }
+                            const lore = display.value?.Lore?.value?.toString();
+                            if (lore?.includes('Status:') && lore?.includes('Sold!')) {
+                                log(`Found claimable purchased auction. Gonna click index ${i}`);
+                                slotToClick = i;
+                            }
                         }
                     }
                 }
@@ -125,18 +128,21 @@ export async function claimSoldItem(bot: MyBot): Promise<boolean> {
 
                 for (const slot of window.slots) {
                     if (slot && typeof slot === 'object' && 'nbt' in slot && slot.nbt && typeof slot.nbt === 'object') {
-                        const lore = slot.nbt.value?.display?.value?.Lore;
-                        if (lore && JSON.stringify(lore).includes('Sold for')) {
-                            clickSlot = slot.slot;
-                        }
-                        const name = slot.nbt.value?.display?.value?.Name?.value?.toString();
-                        if (slot && slot.name === 'cauldron' && name?.includes('Claim All')) {
-                            log(`Found cauldron to claim all sold auctions -> clicking index ${slot.slot}`);
-                            clickWindow(bot, slot.slot);
-                            clearTimeout(timeout);
-                            bot.state = null;
-                            resolve(true);
-                            return;
+                        const display = slot.nbt.value?.display;
+                        if (display && typeof display === 'object') {
+                            const lore = display.value?.Lore;
+                            if (lore && JSON.stringify(lore).includes('Sold for')) {
+                                clickSlot = slot.slot;
+                            }
+                            const name = display.value?.Name?.value?.toString();
+                            if (slot.name === 'cauldron' && name?.includes('Claim All')) {
+                                log(`Found cauldron to claim all sold auctions -> clicking index ${slot.slot}`);
+                                clickWindow(bot, slot.slot);
+                                clearTimeout(timeout);
+                                bot.state = null;
+                                resolve(true);
+                                return;
+                            }
                         }
                     }
                 }
