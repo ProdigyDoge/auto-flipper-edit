@@ -1,4 +1,3 @@
-
 import readline from 'readline'
 import { getConfigProperty } from './configHelper'
 import { sleep, clickWindow } from './utils'
