@@ -71,7 +71,7 @@ bot.once('spawn', async () => {
     bot.chat('/play sb')
     bot.on('scoreboardTitleChanged', onScoreboardChanged)
     registerIngameMessageHandler(bot)
-    registerIngameMessage(bot)
+    registerIngameMessageHandler(bot)
 })
 
 function connectWebsocket(url: string = getConfigProperty('WEBSOCKET_URL')) {
