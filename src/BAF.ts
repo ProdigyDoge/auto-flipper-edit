@@ -6,7 +6,7 @@ import { clickWindow, isCoflChatMessage, removeMinecraftColorCodes, sleep } from
 import { onWebsocketCreateAuction } from './sellHandler'
 import { tradePerson } from './tradeHandler'
 import { swapProfile } from './swapProfileHandler'
-import { flipHandler, onItemWhitelistedMessage } from './flipHandler'
+import { flipHandler, registerIngameMessage } from './flipHandler'
 import { claimSoldItem, registerIngameMessageHandler } from './ingameMessageHandler'
 import { MyBot, TextMessageData } from '../types/autobuy'
 import { getConfigProperty, initConfigHelper, updatePersistentConfigProperty } from './configHelper'
