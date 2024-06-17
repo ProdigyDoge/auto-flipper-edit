@@ -1,10 +1,11 @@
-import { Flip, FlipWhitelistedData, MyBot } from '../types/autobuy'
+import { Flip, MyBot } from '../types/autobuy';
 import { getConfigProperty } from './configHelper';
 import { getFastWindowClicker } from './fastWindowClick';
 import { log, printMcChatToConsole } from './logger';
-import { clickWindow, getWindowTitle, numberWithThousandsSeparators, removeMinecraftColorCodes, sleep } from './utils'
+import { clickWindow, getWindowTitle, numberWithThousandsSeparators, sleep } from './utils';
 import { ChatMessage } from 'prismarine-chat';
 import { sendWebhookItemPurchased, sendWebhookItemPurchased100M } from './webhookHandler';
+import moment from 'moment';
 import { claimPurchased } from './ingameMessageHandler';
 const fs = require('fs');
 const path = require('path');
@@ -46,32 +47,6 @@ export function registerIngameMessage(bot: MyBot) {
             }
         }
     });
-}
-
-// Stores the last 3 whitelist messages so add it to the webhook message for purchased flips
-let whitelistObjects: FlipWhitelistedData[] = []
-export function onItemWhitelistedMessage(text: string) {
-    let chatMessage = removeMinecraftColorCodes(text)
-    let itemName = chatMessage.split(' for ')[0]
-    let price = chatMessage.split(' for ')[1].split(' matched your Whitelist entry: ')[0]
-    let secondPart = chatMessage.split(' matched your Whitelist entry: ')[1]
-    let reason = secondPart.split('\n')[0].trim()
-    let finder = secondPart.split('Found by ')[1]
-
-    whitelistObjects.unshift({
-        itemName: itemName,
-        reason: reason,
-        finder: finder,
-        price: price
-    })
-
-    if (whitelistObjects.length > 3) {
-        whitelistObjects.pop()
-    }
-}
-
-export function getWhitelistedData(itemName: string, price: string): FlipWhitelistedData {
-    return whitelistObjects.find(x => x.itemName === itemName && x.price === price)
 }
 
 export async function flipHandler(bot: MyBot, flip: Flip) {
