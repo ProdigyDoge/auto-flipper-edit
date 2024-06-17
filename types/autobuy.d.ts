@@ -1,4 +1,3 @@
-
 import { Bot } from 'mineflayer'
 
 interface SellData {
