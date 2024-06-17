@@ -1,3 +1,4 @@
+
 import { Bot } from 'mineflayer'
 
 interface SellData {
@@ -31,7 +32,14 @@ interface TextMessageData {
 }
 
 interface MyBot extends Bot {
-    state?: 'purchasing' | 'selling' | 'claiming' | 'gracePeriod'
+    state?: 'purchasing' | 'selling' | 'claiming' | 'gracePeriod' | 'runningSequence'
     lastViewAuctionCommandForPurchase?: string
     privacySettings?: any
+}
+
+interface FlipWhitelistedData {
+    itemName: string
+    reason: string
+    finder: string
+    price: string
 }
