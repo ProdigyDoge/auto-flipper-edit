@@ -5,7 +5,6 @@ import { log, printMcChatToConsole } from './logger';
 import { clickWindow, getWindowTitle, numberWithThousandsSeparators, sleep } from './utils';
 import { ChatMessage } from 'prismarine-chat';
 import { sendWebhookItemPurchased, sendWebhookItemPurchased100M } from './webhookHandler';
-import moment from 'moment';
 import { claimPurchased } from './ingameMessageHandler';
 const fs = require('fs');
 const path = require('path');
