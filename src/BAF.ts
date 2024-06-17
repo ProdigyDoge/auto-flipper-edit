@@ -14,7 +14,6 @@ import { getSessionId } from './coflSessionManager'
 import { sendWebhookInitialized, SendWebhookTotals, DisconnectWebwook, webhookInterval } from './webhookHandler'
 import { processInput, setupConsoleInterface } from './consoleHandler'
 import { initAFKHandler, tryToTeleportToIsland } from './AFKHandler'
-import { runSequence } from './sequenceRunner'
 const fs = require('fs');
 const path = require('path');
 const WebSocket = require('ws')
