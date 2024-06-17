@@ -207,6 +207,22 @@ export async function claimSoldItem(bot: MyBot): Promise<boolean> {
     })
 }
 
+function claimExpiredAuction(bot, slot) {
+    return new Promise(resolve => {
+        bot.on('windowOpen', window => {
+            let title = getWindowTitle(window)
+            if (title == 'BIN Auction View') {
+                log('Clicking slot 31, claiming expired auction')
+                clickWindow(bot, 31)
+                bot.removeAllListeners('windowOpen')
+                bot.state = null
+                bot.closeWindow(window)
+                resolve(true)
+            }
+        })
+        clickWindow(bot, slot)
+    })
+}
 
 function setNothingBoughtFor1HourTimeout(wss: WebSocket) {
     if (errorTimeout) {
