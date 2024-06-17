@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getConfigProperty } from './configHelper'
+import { FlipWhitelistedData } from '../types/autobuy'
 
 function sendWebhookData(options: Partial<Webhook>): void {
     let data = {
@@ -46,12 +47,12 @@ export function sendWebhookInitialized(ID: string) {
     })
 }
 
-export function sendWebhookItemPurchased(itemName: string, price: string, profit: string) {
+export function sendWebhookItemPurchased(itemName: string, price: string, whitelistedData: FlipWhitelistedData) {
     if (!isWebhookConfigured()) {
         return
     }
     let ingameName = getConfigProperty('INGAME_NAME')
-    sendWebhookData({
+    let webhookData = {
         embeds: [
             {
                 title: 'Item Purchased',
