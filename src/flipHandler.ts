@@ -175,7 +175,8 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
                 }
             }
         }
-    }})}
+    }
+    }
 }
 
 async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
