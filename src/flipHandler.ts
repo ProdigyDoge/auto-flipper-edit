@@ -2,7 +2,7 @@ import { Flip, FlipWhitelistedData, MyBot } from '../types/autobuy'
 import { getConfigProperty } from './configHelper';
 import { getFastWindowClicker } from './fastWindowClick';
 import { log, printMcChatToConsole } from './logger';
-import { clickWindow, getWindowTitle, numberWithThousandsSeparators, sleep } from './utils';
+import { clickWindow, getWindowTitle, numberWithThousandsSeparators, removeMinecraftColorCodes, sleep } from './utils'
 import { ChatMessage } from 'prismarine-chat';
 import { sendWebhookItemPurchased, sendWebhookItemPurchased100M } from './webhookHandler';
 import moment from 'moment';
