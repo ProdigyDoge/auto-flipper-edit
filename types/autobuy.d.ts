@@ -31,14 +31,7 @@ interface TextMessageData {
 }
 
 interface MyBot extends Bot {
-    state?: 'purchasing' | 'selling' | 'claiming' | 'gracePeriod' | 'runningSequence'
+    state?: 'purchasing' | 'selling' | 'claiming' | 'gracePeriod'
     lastViewAuctionCommandForPurchase?: string
     privacySettings?: any
-}
-
-interface FlipWhitelistedData {
-    itemName: string
-    reason: string
-    finder: string
-    price: string
 }
