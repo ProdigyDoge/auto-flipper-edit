@@ -1,4 +1,4 @@
-import { Flip, MyBot } from '../types/autobuy';
+import { Flip, FlipWhitelistedData, MyBot } from '../types/autobuy'
 import { getConfigProperty } from './configHelper';
 import { getFastWindowClicker } from './fastWindowClick';
 import { log, printMcChatToConsole } from './logger';
