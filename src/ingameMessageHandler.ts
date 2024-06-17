@@ -6,6 +6,7 @@ import { sendWebhookItemPurchased, sendWebhookItemSold } from './webhookHandler'
 import { getCurrentWebsocket } from './BAF'
 import { getWhitelistedData } from './flipHandler'
 
+// if nothing gets bought for 1 hours, send a report
 let errorTimeout
 
 export async function registerIngameMessageHandler(bot: MyBot) {
