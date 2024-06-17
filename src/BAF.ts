@@ -105,6 +105,10 @@ async function onWebsocketMessage(msg) {
             flipHandler(bot, data)
             break
         case 'chatMessage':
+                        if (data.length > 1 && data[1].text.includes('matched your Whitelist entry:') && !isCoflChatMessage(data[1].text)) {
+                onItemWhitelistedMessage(data[1].text)
+            }
+
             for (let da of [...(data as TextMessageData[])]) {
                 let isCoflChat = isCoflChatMessage(da.text)
                 if (da.text.startsWith("Your") && da.text.includes("connection id is")) {
