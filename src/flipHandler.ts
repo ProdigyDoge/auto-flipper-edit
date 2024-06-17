@@ -49,6 +49,32 @@ export function registerIngameMessage(bot: MyBot) {
     });
 }
 
+// Stores the last 3 whitelist messages so add it to the webhook message for purchased flips
+let whitelistObjects: FlipWhitelistedData[] = []
+export function onItemWhitelistedMessage(text: string) {
+    let chatMessage = removeMinecraftColorCodes(text)
+    let itemName = chatMessage.split(' for ')[0]
+    let price = chatMessage.split(' for ')[1].split(' matched your Whitelist entry: ')[0]
+    let secondPart = chatMessage.split(' matched your Whitelist entry: ')[1]
+    let reason = secondPart.split('\n')[0].trim()
+    let finder = secondPart.split('Found by ')[1]
+
+    whitelistObjects.unshift({
+        itemName: itemName,
+        reason: reason,
+        finder: finder,
+        price: price
+    })
+
+    if (whitelistObjects.length > 3) {
+        whitelistObjects.pop()
+    }
+}
+
+export function getWhitelistedData(itemName: string, price: string): FlipWhitelistedData {
+    return whitelistObjects.find(x => x.itemName === itemName && x.price === price)
+}
+
 export async function flipHandler(bot: MyBot, flip: Flip) {
     notcoins = false;
     flip.purchaseAt = new Date(flip.purchaseAt);
