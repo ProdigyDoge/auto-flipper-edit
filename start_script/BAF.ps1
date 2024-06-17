@@ -6,8 +6,7 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 }
 
 # Create BAF folder in APPDATA if it doesn't exist
-$BafPath = "$env:APPDATA\BAF"
-
+$BafPath = '"${env:APPDATA}\BAF"'
 $FolderExists = Test-Path -Path $BafPath -PathType Container
 if (!$FolderExists) {
     New-Item -ItemType Directory -Path $BafPath
@@ -30,11 +29,10 @@ if (-not $NewestVersionAlreadyInstalled) {
     Expand-Archive -Path $ZipFilePath -DestinationPath $BafPath 
     Remove-Item -Path $ZipFilePath
     $ResultFolder = Get-ChildItem -Path $BafPath | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    Rename-Item -Path $ResultFolder.FullName -NewName $NewestVersion    
-    Set-Location -Path $FolderPath
-    Invoke-Expression "npm i"
+    Rename-Item -Path $ResultFolder.FullName -NewName $NewestVersion
 }
 
 # Start BAF
 Set-Location -Path $FolderPath
+Invoke-Expression "npm i"
 Invoke-Expression "npm run start"
