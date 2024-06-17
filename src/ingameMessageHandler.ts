@@ -2,7 +2,7 @@ import { MyBot } from '../types/autobuy'
 import { log, printMcChatToConsole } from './logger'
 import { clickWindow, getWindowTitle } from './utils'
 import { ChatMessage } from 'prismarine-chat'
-import { sendWebhookItemSold } from './webhookHandler'
+import { sendWebhookItemPurchased, sendWebhookItemSold } from './webhookHandler'
 import { getCurrentWebsocket } from './BAF'
 import { getWhitelistedData } from './flipHandler'
 
