@@ -78,7 +78,7 @@ export function sendWebhookItemPurchased(itemName: string, price: string, whitel
                 thumbnail: { url: `https://minotar.net/helm/${ingameName}/600.png` },
             }
         ]
-    })
+    }
 }
 
 export function sendWebhookItemPurchased100M(itemName: string, price: string, profit: string) {
