@@ -127,6 +127,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
                 bot.removeAllListeners('windowOpen');
                 notcoins = false;
             }
+            globalText = '';
         }
     }
 }
