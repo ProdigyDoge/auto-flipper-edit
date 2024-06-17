@@ -138,48 +138,6 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
         let currentWindow = bot.currentWindow; // Rename 'window' to 'currentWindow'
         let total_clicks = 0;
         if (isBed && title.toString().includes('BIN Auction View')) {
-            log(`Starting the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-            let items = currentWindow.containerItems(); // Use 'currentWindow' instead of 'window'
-            bot.state = 'purchasing';
-
-            // Filter out the 'black_stained_glass_pane' item
-            items = items.filter(item => item.name !== 'black_stained_glass_pane');
-            let potatoItem = items.find(item => item.name === 'potato');
-
-            if (potatoItem) {
-                console.log('Item "potato" found. Stopping the loop...');
-                return;
-            }
-
-            while (!title.toString().includes('Confirm Purchase') && !potatoItem) {
-                await sleep(getConfigProperty('DELAY_BETWEEN_CLICKS')); // Removed random delay
-                clickWindow(bot, 31);
-                total_clicks++;
-
-                // Update the window and the list of items
-                currentWindow = bot.currentWindow; // Use 'currentWindow' instead of 'window'
-                title = getWindowTitle(currentWindow); // Use 'currentWindow' instead of 'window'
-                items = currentWindow.containerItems().filter(item => item.name !== 'black_stained_glass_pane'); // Use 'currentWindow' instead of 'window'
-                potatoItem = items.find(item => item.name === 'potato');
-
-                if (potatoItem) {
-                    console.log('Item "potato" found. Stopping the loop.');
-                    break;
-                }
-                if (notcoins || total_clicks > 300) {
-                    let title = getWindowTitle(currentWindow); // Use 'currentWindow' instead of 'window'
-                    if (title.toString().includes('BIN Auction View')) {
-                        printMcChatToConsole("§f[§4BAF§f]: §cClosing this flip because you don't have enough coins to purchase!");
-                        bot.removeAllListeners('windowOpen');
-                        bot.state = null;
-                        bot.closeWindow(window); // Use 'currentWindow' instead of 'window'
-                        notcoins = false;
-                        return;
-                    }
-                }
-            }
-        }
-
         log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
         printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
         total_clicks = 0;
