@@ -6,6 +6,8 @@ import { clickWindow, getWindowTitle, numberWithThousandsSeparators, sleep } fro
 import { ChatMessage } from 'prismarine-chat';
 import { sendWebhookItemPurchased, sendWebhookItemPurchased100M } from './webhookHandler';
 import { claimPurchased } from './ingameMessageHandler';
+import moment from 'moment'; // Add this line
+
 const fs = require('fs');
 const path = require('path');
 
@@ -62,33 +64,34 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     bot.state = 'purchasing'
     let timeout = setTimeout(() => {
         if (bot.state === 'purchasing') {
-            log("Resetting 'bot.state === purchasing' lock")
-            bot.state = null
-            bot.removeAllListeners('windowOpen')
+            log("Resetting 'bot.state === purchasing' lock");
+            bot.state = null;
+            bot.removeAllListeners('windowOpen');
             notcoins = false;
         }
-    }, 5000)
+    }, 5000);
+
     let isBed = flip.purchaseAt.getTime() > new Date().getTime();
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime() - getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY');
 
     bot.lastViewAuctionCommandForPurchase = `/viewauction ${flip.id}`;
-    await sleep(delayUntilBuyStart)
+    await sleep(delayUntilBuyStart);
     bot.chat(bot.lastViewAuctionCommandForPurchase);
 
     printMcChatToConsole(
         `§f[§4BAF§f]: §fTrying to purchase flip${isBed ? ' (Bed)' : ''}: ${flip.itemName} §ffor ${numberWithThousandsSeparators(
             flip.startingBid
         )} coins (Target: ${numberWithThousandsSeparators(flip.target)}) §e(Profit: +${numberWithThousandsSeparators(flip.target - flip.startingBid * 0.965).split(".")[0]})`
-    )
+    );
 
     if (getConfigProperty('USE_WINDOW_SKIPS')) {
         useWindowSkipPurchase(bot, flip, isBed);
         
         // clear timeout after 1sec, so there are no weird overlaps that mess up the windowIds
         setTimeout(() => {
-            bot.state = null
-            clearTimeout(timeout)
-        }, 1600)
+            bot.state = null;
+            clearTimeout(timeout);
+        }, 1600);
     } else {
         await useRegularPurchase(bot, isBed, flip);
         await sleep(850);
@@ -133,49 +136,48 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
 }
         
 async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
-    bot.addListener('windowOpen', async window => {
+    bot.addListener('windowOpen', async (window) => {
         let title = getWindowTitle(window);
-        let currentWindow = bot.currentWindow; // Rename 'window' to 'currentWindow'
         let total_clicks = 0;
         if (isBed && title.toString().includes('BIN Auction View')) {
-        log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-        printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
-        total_clicks = 0;
+            log(`Finished the bed loop... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
+            printMcChatToConsole(`§f[§4BAF§f]: §l§6Clicked ${total_clicks} times on the bed.`);
+            total_clicks = 0;
 
-        // Move this part inside the 'windowOpen' listener callback
-        if (title.toString().includes('BIN Auction View')) {
-            clickWindow(bot, 31);
-        }
+            if (title.toString().includes('BIN Auction View')) {
+                await clickWindow(bot, 31);
+            }
 
-        if (title.toString().includes('Confirm Purchase')) {
-            let startTime = Date.now();
-            let itemFound = false;
+            if (title.toString().includes('Confirm Purchase')) {
+                let startTime = Date.now();
+                let itemFound = false;
 
-            while (!itemFound) {
-                let items = currentWindow.containerItems(); // Use 'currentWindow' instead of 'window'
-                let item = items.find(item => item.name === 'green_terracotta');
-                if (item) {
-                    log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
-                    clickWindow(bot, 11);
-                    try {
-                        bot.removeAllListeners('windowOpen');
-                        bot.state = null;
-                        itemFound = true;
+                while (!itemFound) {
+                    let items = window.containerItems();
+                    let item = items.find(item => item.name === 'green_terracotta');
+                    if (item) {
+                        log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
+                        await clickWindow(bot, 11);
+                        try {
+                            bot.removeAllListeners('windowOpen');
+                            bot.state = null;
+                            itemFound = true;
 
-                        let endTime = Date.now();
-                        let duration = endTime - startTime;
-                        log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
+                            let endTime = Date.now();
+                            let duration = endTime - startTime;
+                            log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Total time: ${duration} ms`);
 
-                        return;
-                    } catch (error) {
-                        return printMcChatToConsole(`Error in the try ${error}`);
+                            return;
+                        } catch (error) {
+                            printMcChatToConsole(`Error in the try ${error}`);
+                        }
+                    } else {
+                        await sleep(5);
                     }
-                } else {
-                    await sleep(5); // Removed random delay
                 }
             }
         }
-    }})
+    });
 }
 
 async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
@@ -185,6 +187,6 @@ async function useWindowSkipPurchase(bot: MyBot, flip: Flip, isBed: boolean) {
     } else {
         getFastWindowClicker().clickPurchase(flip.startingBid, lastWindowId + 1);
     }
-    await sleep(getConfigProperty('FLIP_ACTION_DELAY')); // Removed random delay
+    await sleep(getConfigProperty('FLIP_ACTION_DELAY'));
     getFastWindowClicker().clickConfirm(flip.startingBid, flip.itemName, lastWindowId + 2);
 }
