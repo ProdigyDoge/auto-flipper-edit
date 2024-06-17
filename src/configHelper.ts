@@ -7,12 +7,13 @@ var toml = require('toml')
 let config: Config = {
     INGAME_NAME: '',
     WEBHOOK_URL: '',
-    FLIP_ACTION_DELAY: 100,
     ENABLE_CONSOLE_INPUT: true,
     USE_COFL_CHAT: true,
     SESSIONS: {},
+    USE_WINDOW_SKIPS: false,
+    DELAY_BETWEEN_CLICKS: 50,
+    DELAY_TO_REMOVE_BED: 400,
     WEBSOCKET_URL: 'wss://sky.coflnet.com/modsocket',
-    BED_MULTIPLE_CLICKS_DELAY: 50
 }
 
 json2toml({ simple: true })
@@ -30,30 +31,18 @@ export function initConfigHelper() {
             }
         })
         if (hadChange) {
-            fs.writeFileSync(filePath, prepareTomlBeforeWrite(json2toml(existingConfig)))
+            fs.writeFileSync(filePath, json2toml(existingConfig))
         }
 
         config = existingConfig
     }
 }
 
-export function updatePersistentConfigProperty(property: keyof Config, value: any) {
-    config[property as string] = value
-    fs.writeFileSync(filePath, prepareTomlBeforeWrite(json2toml(config)))
+export function updatePersistentConfigProperty(property: string, value: any) {
+    config[property] = value
+    fs.writeFileSync(filePath, json2toml(config))
 }
 
-export function getConfigProperty(property: keyof Config): any {
+export function getConfigProperty(property: string): any {
     return config[property]
-}
-
-function prepareTomlBeforeWrite(tomlString: string): string {
-    let lines = tomlString.split('\n')
-    let index = lines.findIndex(l => l.startsWith('BED_MULTIPLE_CLICKS_DELAY = '))
-    lines.splice(
-        index,
-        0,
-        '# Bed flips are clicked 3 times with this setting. First delay in milliseconds before it should mathematically work. Once exactly at the time and once after the time. Disable it with a value less than 0.'
-    )
-
-    return lines.join('\n')
 }
