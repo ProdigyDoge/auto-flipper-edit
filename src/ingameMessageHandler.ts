@@ -15,6 +15,28 @@ export async function registerIngameMessageHandler(bot: MyBot) {
         let text = message.getText(null)
         if (type == 'chat') {
             printMcChatToConsole(message.toAnsi())
+            if (text.startsWith('You purchased')) {
+                wss.send(
+                    JSON.stringify({
+                        type: 'uploadTab',
+                        data: JSON.stringify(Object.keys(bot.players).map(playername => bot.players[playername].displayName.getText(null)))
+                    })
+                )
+                wss.send(
+                    JSON.stringify({
+                        type: 'uploadScoreboard',
+                        data: JSON.stringify(bot.scoreboard.sidebar.items.map(item => item.displayName.getText(null).replace(item.name, '')))
+                    })
+                )
+                claimPurchased(bot)
+
+                let itemName = text.split(' purchased ')[1].split(' for ')[0]
+                let price = text.split(' for ')[1].split(' coins!')[0].replace(/,/g, '')
+                let whitelistedData = getWhitelistedData(itemName, price)
+
+                sendWebhookItemPurchased(itemName, price, whitelistedData)
+                setNothingBoughtFor1HourTimeout(wss)
+            }
             if (text.startsWith('[Auction]') && text.includes('bought') && text.includes('for')) {
                 log('New item sold')
                 claimSoldItem(bot)
@@ -34,15 +56,8 @@ export async function registerIngameMessageHandler(bot: MyBot) {
                 )
             }
         }
-    })  
-    claimPurchased(bot)
+    })
 
-    
-    let itemName = text.split(' purchased ')[1].split(' for ')[0]
-    let price = text.split(' for ')[1].split(' coins!')[0].replace(/,/g, '')
-    let whitelistedData = getWhitelistedData(itemName, price)
-
-    sendWebhookItemPurchased(itemName, price, whitelistedData)
     setNothingBoughtFor1HourTimeout(wss)
 }
 
