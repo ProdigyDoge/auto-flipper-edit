@@ -46,12 +46,12 @@ export function sendWebhookInitialized(ID: string) {
     })
 }
 
-export function sendWebhookItemPurchased(itemName: string, price: string, whitelistedData: FlipWhitelistedData) {
+export function sendWebhookItemPurchased(itemName: string, price: string, profit: string) {
     if (!isWebhookConfigured()) {
         return
     }
     let ingameName = getConfigProperty('INGAME_NAME')
-    let webhookData = {
+    sendWebhookData({
         embeds: [
             {
                 title: 'Item Purchased',
@@ -77,7 +77,7 @@ export function sendWebhookItemPurchased(itemName: string, price: string, whitel
                 thumbnail: { url: `https://minotar.net/helm/${ingameName}/600.png` },
             }
         ]
-    }
+    })
 }
 
 export function sendWebhookItemPurchased100M(itemName: string, price: string, profit: string) {
