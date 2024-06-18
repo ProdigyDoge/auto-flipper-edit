@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { getConfigProperty } from './configHelper'
-import { FlipWhitelistedData } from '../types/autobuy'
 
 function sendWebhookData(options: Partial<Webhook>): void {
     let data = {
