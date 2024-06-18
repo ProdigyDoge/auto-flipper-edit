@@ -1,4 +1,4 @@
-import { Flip, MyBot } from '../types/autobuy'
+    import { Flip, MyBot } from '../types/autobuy'
 import { getConfigProperty } from './configHelper'
 import { getFastWindowClicker } from './fastWindowClick'
 import { log, printMcChatToConsole } from './logger'
@@ -59,7 +59,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
     if (bot.state) {
         setTimeout(() => {
             flipHandler(bot, flip)
-        }, 1100)
+        }, 650)
         return
     }
     bot.state = 'purchasing'
@@ -70,7 +70,7 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
             bot.removeAllListeners('windowOpen')
             notcoins = false;
         }
-    }, 10000)
+    }, 5550)
     let isBed = flip.purchaseAt.getTime() > new Date().getTime()
     let delayUntilBuyStart = isBed ? flip.purchaseAt.getTime() - new Date().getTime()-getConfigProperty('DELAY_TO_REMOVE_BED') : getConfigProperty('FLIP_ACTION_DELAY')
 
@@ -91,10 +91,10 @@ export async function flipHandler(bot: MyBot, flip: Flip) {
         setTimeout(() => {
             bot.state = null
             clearTimeout(timeout)
-        }, 2500)
+        }, 1850)
     } else {
         await useRegularPurchase(bot, isBed, flip);
-        await sleep(2000)
+        await sleep(1750)
         if (globalText.startsWith('You purchased')) {
             claimPurchased(bot)
             let value = flip.target - flip.startingBid;
@@ -181,14 +181,35 @@ async function useRegularPurchase(bot: MyBot, isBed: boolean, flip: Flip) {
             clickWindow(bot, 31)
         }
 
-        if (title.toString().includes('Confirm Purchase')) {
-            clickWindow(bot, 11)
-            bot.removeAllListeners('windowOpen')
-            bot.state = null
-            return
-        }
-    })
-}
+       let startTime = Date.now();
+            let itemFound = false;
+
+            while (!itemFound) {
+                let items = window1.containerItems();
+                let item = items.find(item => item.name === 'green_terracotta');
+                if (item) {
+                    log(`Starting the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}`);
+
+                    clickWindow(bot, 11);
+                    try {
+                        
+                        bot.removeAllListeners('windowOpen');
+                        bot.state = null;
+                        itemFound = true;
+
+                        let endTime = Date.now();
+                        let duration = endTime - startTime;
+                        log(`Finished the Confirm button... ${moment().format('ddd MMM DD YYYY HH:mm:ss.SSS [GMT]ZZ')}. Tempo total: ${duration} ms`);
+
+                        return;
+                    }
+                    catch (error) {
+                        return printMcChatToConsole(`Error in the try ${error}`);
+                    }
+                } else {
+                    await sleep(4);
+                }
+            }
 
 async function useWindowSkipPurchase(flip: Flip, isBed: boolean) {
     let lastWindowId = getFastWindowClicker().getLastWindowId()
