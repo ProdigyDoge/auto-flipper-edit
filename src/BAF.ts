@@ -71,7 +71,7 @@ bot.once('spawn', async () => {
     bot.chat('/play sb')
     bot.on('scoreboardTitleChanged', onScoreboardChanged)
     registerIngameMessageHandler(bot)
-    registerIngameMessageHandler(bot)
+    registerIngameMessage(bot)
 })
 
 function connectWebsocket(url: string = getConfigProperty('WEBSOCKET_URL')) {
@@ -219,7 +219,7 @@ async function sendWebhookTotalsMSG(buyTotal: number, soldTotal: number) {
                 soldTotal = parseInt(value, 10);
             }
         }
-    
+        
         await SendWebhookTotals(buyTotal, soldTotal);
 
         const fileContent2 = `buy_total=0\nsold_total=0`;
@@ -227,6 +227,7 @@ async function sendWebhookTotalsMSG(buyTotal: number, soldTotal: number) {
         executed = false;
     }
 }
+
 sendWebhookTotalsMSG(0, 0);
 
 const startSession = (Date.now() / 1000).toFixed(0)
@@ -311,4 +312,3 @@ export async function getCurrentWebsocket(): Promise<WebSocket> {
         resolve(socket)
     })
 }
-
